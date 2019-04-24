@@ -1,5 +1,11 @@
- struct List {
+struct List {
     head: Link,
+}
+
+impl List {
+    pub fn new() -> Self {
+        List { head: Link::Empty }
+    }
 }
 
 enum Link {
@@ -11,5 +17,3 @@ struct Node {
     elem: i32,
     next: Link,
 }
-
-
