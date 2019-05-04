@@ -1,5 +1,4 @@
 use std::mem;
-use first::Link::Empty;
 
 struct List {
     head: Link,
