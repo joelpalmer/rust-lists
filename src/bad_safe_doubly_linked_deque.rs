@@ -24,7 +24,7 @@ impl<T> Node<T> {
     }
 }
 
-impl<T> List<T> {
+impl<T> List<T> { //todo: derive default impl?
     pub fn new() -> Self {
         List { head: None, tail: None }
     }
@@ -61,6 +61,12 @@ impl<T> List<T> {
             Rc::try_unwrap(old_head).ok().unwrap().into_inner().elem
         })
     }
+
+    pub fn peek_front(&self) -> Option<Ref<T>> {
+        self.head.as_ref().map(|node| {
+            Ref::map(node.borrow(), |node| &node.elem)
+        })
+    }
 }
 
 impl<T> Drop for List<T> {
@@ -72,6 +78,17 @@ impl<T> Drop for List<T> {
 #[cfg(test)]
 mod test {
     use super::List;
+
+    #[test]
+    fn peek() {
+        let mut list = List::new();
+        assert!(list.peek_front().is_none());
+        list.push_front(1);
+        list.push_front(2);
+        list.push_front(3);
+
+        assert_eq!(&*list.peek_front().unwrap(), &3);
+    }
 
     #[test]
     fn basics() {
