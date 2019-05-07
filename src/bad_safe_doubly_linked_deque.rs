@@ -26,7 +26,7 @@ impl<T> Node<T> {
 
 impl<T> List<T> {
     pub fn new() -> Self {
-        List { head: None, tail: None}
+        List { head: None, tail: None }
     }
 
     pub fn push_front(&mut self, elem: T) {
@@ -45,5 +45,20 @@ impl<T> List<T> {
         }
     }
 
-
+    pub fn pop_front(&mut self) -> Option<T> {
+        self.head.take().map(|old_head| {
+            match old_head.borrow_mut().next.take() {
+                Some(new_head) => {
+                    // not emptying list
+                    new_head.borrow_mut().prev.take();
+                    self.head = Some(new_head);
+                }
+                None => {
+                    // emptying list
+                    self.tail.take();
+                }
+            }
+            Rc::try_unwrap(old_head).ok().unwrap().into_inner().elem
+        })
+    }
 }
